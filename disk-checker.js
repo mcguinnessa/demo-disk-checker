@@ -4,11 +4,14 @@ const {MongoClient} = require('mongodb');
 const DAY_S = 24 * 60 * 60;
 const DAY_MS = DAY_S * 1000;
 const HOUR_MS = 60 * 60 * 1000;
-const INTERVAL_S = 30 * 60;
+const INTERVAL_S = 60 * 60;
 const INTERVAL_MS = INTERVAL_S * 1000;
 
-const max_disk = 28;
-const min_disk = 27;
+const max_disk = 73;
+const min_disk = 33;
+const free_space = 18;
+
+var disk_usage = min_disk;
 
 //nst hourly_weighting = [1, 2, 3, 4, 5, 6, 7, 8, 9 10, 11, 12, 13, 14 ,15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
 const hourly_weighting = [1, 2, 1, 1, 1, 1, 2, 2, 5,  5,  5, 4,  5,  6,  6,  5,  7,  5,  8,  8,  8,  9,  10,  10]
@@ -24,10 +27,21 @@ async function getValue(a_timestamp){
   var record_hour = a_timestamp.getHours();
   weighting = hourly_weighting[record_hour];
 
-  const ceiling = (max_disk / 10) * weighting;
-  var disk_usage = min_disk + Math.floor(Math.random() * ceiling);
+  if (70 == Math.floor(Math.random() * 100)){
+    console.log("Clean Disk!");
+    disk_usage -= free_space;
+  }
 
-  console.log("TIME:" + a_timestamp + " HOUR:" + record_hour + " WEIGHTING:" + weighting + " CEILING:" + ceiling + " DISK:" + disk_usage);
+  disk_usage += ((Math.floor(Math.random() * 50) - 12) / 100);
+  if (disk_usage > max_disk) {disk_usage = max_disk;}
+
+
+  //const ceiling = (max_disk / 10) * weighting;
+//  var disk_usage = min_disk + Math.floor(Math.random() * (max_disk - min_disk));
+
+  //console.log("TIME:" + a_timestamp + " HOUR:" + record_hour + " WEIGHTING:" + weighting + " CEILING:" + ceiling + " DISK:" + disk_usage);
+//  console.log("TIME:" + a_timestamp + " HOUR:" + record_hour + " WEIGHTING:" + weighting + " DISK:" + disk_usage);
+  console.log("TIME:" + a_timestamp + " HOUR:" + record_hour + " DISK:" + disk_usage);
   return disk_usage;
 }
 
@@ -53,9 +67,9 @@ async function run(){
 //      console.log("Delete:" + d_res.deleteCount);
 //    })
 
-    var yesterday = new Date(now - DAY_MS);
-    var date_record = yesterday;
-    console.log("Yesterday:" + yesterday)
+    var last_week = new Date(now - (DAY_MS * 7));
+    var date_record = last_week;
+    console.log("Last Week:" + last_week)
 
     while (date_record <= now){
 
