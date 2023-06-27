@@ -25,6 +25,13 @@ variable "mongo_url"  {
   default = ""
 }
 
+variable "docker_sha"  {
+  description = "The SHA from the docker build"
+  type = string
+  default = ""
+}
+
+
 
 
 # No longer need this, using dockerhub repo
@@ -45,7 +52,7 @@ resource "aws_ecs_task_definition" "diskchecker_task" {
   [
     {
       "name": "disk-checker-task",
-      "image": "mcguinnessa/demo-disk-checker",
+      "image": "mcguinnessa/demo-disk-checker@${var.docker_sha}",
       "essential": true,
       "memory": 512,
       "cpu": 256,
