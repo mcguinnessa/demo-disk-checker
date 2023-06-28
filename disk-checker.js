@@ -35,6 +35,7 @@ async function getValue(a_timestamp){
 
   disk_usage += ((Math.floor(Math.random() * 50) - 12) / 100);
   if (disk_usage > max_disk) {disk_usage = max_disk;}
+  if (disk_usage < min_disk) {disk_usage = min_disk;}
 
 
   //const ceiling = (max_disk / 10) * weighting;
