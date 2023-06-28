@@ -9,7 +9,7 @@ const INTERVAL_MS = INTERVAL_S * 1000;
 
 const max_disk = 73;
 const min_disk = 33;
-const free_space = 18;
+const free_space = 28;
 
 var disk_usage = min_disk;
 
@@ -30,6 +30,7 @@ async function getValue(a_timestamp){
   if (70 == Math.floor(Math.random() * 100)){
     console.log("Clean Disk!");
     disk_usage -= free_space;
+    disk_usage -= Math.floor(Math.random() * free_space);
   }
 
   disk_usage += ((Math.floor(Math.random() * 50) - 12) / 100);
